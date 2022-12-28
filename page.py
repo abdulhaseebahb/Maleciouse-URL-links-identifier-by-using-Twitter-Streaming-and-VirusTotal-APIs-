@@ -13,14 +13,14 @@ def index():
      return render_template('index.html')
 
 
-@app.route('/check', methods=['POST', 'GET'])
-def check():
-    url = "hxxp://www.malwaredomainlist.com/"
+@app.route('/check/<string:url>', methods=['GET'])
+def check(url):
+    # url = "hxxp://www.malwaredomainlist.com/"
     data = None
-    if request.method == 'POST':
+    if request.method == 'GET':
        with virustotal_python.Virustotal("5d5bfe2c2840146677ffa84db2c82a4f3cf7a4c721d20a30a7b678ed7966e801") as vtotal:
             try:
-                resp = vtotal.request("urls", data={"url": url}, method="POST")
+                resp = vtotal.request("urls", data={"url": url}, method="GET")
         # Safe encode URL in base64 format
         # https://developers.virustotal.com/reference/url
                 url_id = urlsafe_b64encode(url.encode()).decode().strip("=")
@@ -36,3 +36,9 @@ def check():
 
        
     return f"{escape(data)}"
+    # GET API with path param
+@app.route('/gfg/<int:page>')
+def gfg(page):
+    return render_template('gfg.html', page=page)
+if __name__ == '__main__':
+    app.run()
